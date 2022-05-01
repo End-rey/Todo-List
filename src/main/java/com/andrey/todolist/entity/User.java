@@ -1,6 +1,7 @@
 package com.andrey.todolist.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,8 +15,9 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany
-    @JoinColumn(name="username")
+//    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    @JoinColumn(name="username")
     private List<ToDoItem> toDoLists;
 
     public User(String username, String password) {
@@ -48,5 +50,15 @@ public class User {
 
     public void setToDoLists(List<ToDoItem> toDoLists) {
         this.toDoLists = toDoLists;
+        this.toDoLists.forEach(toDoItem -> toDoItem.setUser(this));
     }
+
+    public void addToDoItem(ToDoItem toDoItem) {
+        if(toDoLists == null){
+            toDoLists = new ArrayList<>();
+        }
+        toDoLists.add(toDoItem);
+        toDoItem.setUser(this);
+    }
+
 }
