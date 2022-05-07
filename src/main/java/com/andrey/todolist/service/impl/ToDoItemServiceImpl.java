@@ -1,20 +1,20 @@
-package com.andrey.todolist.service;
+package com.andrey.todolist.service.impl;
 
-import com.andrey.todolist.dao.ToDoItemRepo;
+import com.andrey.todolist.entity.Status;
+import com.andrey.todolist.repository.ToDoItemRepo;
 import com.andrey.todolist.entity.ToDoItem;
 import com.andrey.todolist.entity.User;
 import com.andrey.todolist.exceptions.ToDoItemNotFoundException;
 import com.andrey.todolist.exceptions.UserAccessException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import com.andrey.todolist.service.ToDoItemService;
+import com.andrey.todolist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
-import java.util.Optional;
+import java.util.Date;
 
 
 @Service
@@ -38,24 +38,28 @@ public class ToDoItemServiceImpl implements ToDoItemService {
     @Override
     public ToDoItem addToDoItem(ToDoItem toDoItem, Principal principal) {
         User currentUser = userService.findLoggedInUser(principal);
+        toDoItem.setCreated(new Date());
+        toDoItem.setUpdated(new Date());
+        toDoItem.setStatus(Status.ACTIVE);
         currentUser.addToDoItem(toDoItem);
         return toDoItemRepo.save(toDoItem);
     }
 
     @Override
     public ToDoItem editToDo(ToDoItem newToDoItem, Principal principal) {
-        int id = newToDoItem.getId();
+        Long id = newToDoItem.getId();
         if (isToDoAccessible(id, principal)) {
             ToDoItem toDoItem = findToDoItemById(id);
             toDoItem.setDescription(newToDoItem.getDescription());
             toDoItem.setDone(newToDoItem.isDone());
+            toDoItem.setUpdated(new Date());
             return toDoItemRepo.save(toDoItem);
         }
         return null;
     }
 
     @Override
-    public void deleteToDo(int id, Principal principal) {
+    public void deleteToDo(Long id, Principal principal) {
         if(isToDoAccessible(id, principal)) {
 //            ToDoItem toDoItem = findToDoItemById(id);
 
@@ -64,13 +68,13 @@ public class ToDoItemServiceImpl implements ToDoItemService {
     }
 
     @Override
-    public void completeToDo(int id, Principal principal) {
+    public void completeToDo(Long id, Principal principal) {
         if(isToDoAccessible(id, principal)) {
             findToDoItemById(id).setDone(true);
         }
     }
 
-    private boolean isToDoAccessible(int id, Principal principal) {
+    private boolean isToDoAccessible(Long id, Principal principal) {
         User currentUser = userService.findLoggedInUser(principal);
         if (!toDoExists(id)) {
             throw new ToDoItemNotFoundException();
@@ -83,7 +87,7 @@ public class ToDoItemServiceImpl implements ToDoItemService {
     }
 
     @Override
-    public boolean toDoExists(int id) {
+    public boolean toDoExists(Long id) {
         ToDoItem toDoItem = findToDoItemById(id);
         if (toDoItem != null)
             return true;
@@ -103,8 +107,8 @@ public class ToDoItemServiceImpl implements ToDoItemService {
     }
 
     @Override
-    public ToDoItem findToDoItemById(int id) {
-        ToDoItem toDoItem = toDoItemRepo.findById(id);
+    public ToDoItem findToDoItemById(Long id) {
+        ToDoItem toDoItem = toDoItemRepo.getById(id);
         return toDoItem;
     }
 }

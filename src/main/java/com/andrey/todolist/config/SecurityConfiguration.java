@@ -1,48 +1,69 @@
 package com.andrey.todolist.config;
 
-import com.andrey.todolist.service.UserAuthService;
+import com.andrey.todolist.security.UserAuthService;
+import com.andrey.todolist.security.jwt.JwtConfigurer;
+import com.andrey.todolist.security.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-@Configuration
-@EnableConfigurationProperties
+//@Configuration
+//@EnableConfigurationProperties
+@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+//    UserAuthService userDetailsService;
+
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Autowired
-    UserAuthService userDetailsService;
+    public SecurityConfiguration(JwtTokenProvider jwtTokenProvider){
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder builder)
-            throws Exception {
-        builder.userDetailsService(userDetailsService);
-    }
+//    @Override
+//    public void configure(AuthenticationManagerBuilder builder)
+//            throws Exception {
+//        builder.userDetailsService(userDetailsService);
+//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .httpBasic().disable()
                 .csrf().disable()
-                    .authorizeRequests().anyRequest().authenticated()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .httpBasic()
+                    .authorizeRequests()
+                    .antMatchers("/api/admin/users/**").hasRole("ADMIN")
+                    .antMatchers("/api/auth/login").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .apply(new JwtConfigurer(jwtTokenProvider))
                 .and()
                     .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .clearAuthentication(true)
-                    .logoutSuccessUrl("/todos")
+                    .logoutSuccessUrl("/login")
                     .deleteCookies("JSESSIONID")
-                    .invalidateHttpSession(true)
-                .and()
-                    .sessionManagement().disable();
+                    .invalidateHttpSession(true);
     }
 }

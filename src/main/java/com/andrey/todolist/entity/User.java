@@ -1,57 +1,43 @@
 package com.andrey.todolist.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name="users")
-public class User {
+@Data
+public class User extends BaseEntity {
 
-    @Id
+//    @Id
     @Column(name="username")
     private String username;
 
     @Column(name = "password")
     private String password;
 
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
 //    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    @JoinColumn(name="username")
+//    @JoinColumn(name="id")
     private List<ToDoItem> toDoLists;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public User() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<ToDoItem> getToDoLists() {
-        return toDoLists;
-    }
-
-    public void setToDoLists(List<ToDoItem> toDoLists) {
-        this.toDoLists = toDoLists;
-        this.toDoLists.forEach(toDoItem -> toDoItem.setUser(this));
-    }
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+    joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+    inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     public void addToDoItem(ToDoItem toDoItem) {
         if(toDoLists == null){

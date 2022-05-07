@@ -7,26 +7,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class MyControllerForUsers {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public Iterable<User> showAllUsers(){
         Iterable<User> users = userService.findAll();
 
         return users;
     }
 
-    @GetMapping("/users/{name}")
-    public User showUserByName(@PathVariable String name){
-        return userService.findByName(name);
+    @GetMapping("/users/{username}")
+    public User showUserByUsername(@PathVariable String username){
+        return userService.findByUsername(username);
     }
 
     @PostMapping("/users")
-    public User addUser(@RequestBody User user){
-        return userService.saveUser(user);
+    public User registerUser(@RequestBody User user){
+        return userService.register(user);
     }
 
     @PutMapping("/users")
@@ -34,12 +35,12 @@ public class MyControllerForUsers {
         return userService.saveUser(user);
     }
 
-    @DeleteMapping("/users/{name}")
-    public String deleteUserByName(@PathVariable String name){
-        User user = userService.findByName(name);
+    @DeleteMapping("/users/{username}")
+    public String deleteUserByUsername(@PathVariable String username){
+        User user = userService.findByUsername(username);
         if(user != null) {
             userService.deleteUser(user);
-            return "User with name " + name + " was deleted";
+            return "User with username " + username + " was deleted";
         } else
             return "No such user";
     }

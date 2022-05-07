@@ -40,13 +40,13 @@ public class MyControllerForToDoItems {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteToDoItem(@PathVariable int id, Principal principal){
+    public String deleteToDoItem(@PathVariable Long id, Principal principal){
         toDoItemService.deleteToDo(id, principal);
         return "The ToDOItem with id = " + id + " was deleted";
     }
 
     @PatchMapping("/{id}/complete")
-    public ResponseEntity completeToDoItem(@PathVariable int id, Principal principal){
+    public ResponseEntity completeToDoItem(@PathVariable Long id, Principal principal){
         toDoItemService.completeToDo(id, principal);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
