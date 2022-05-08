@@ -49,14 +49,15 @@ public class JwtTokenProvider {
         claims.put("roles", getRolesNames(roles));
 
         Date now = new Date();
-        Date validity = new Date(now.getTime() + validityInMilliseconds);
+        Date validity_access = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()
+        String access_token = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(validity)
+                .setExpiration(validity_access)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
+        return access_token;
     }
 
     public Authentication getAuthentication(String token){

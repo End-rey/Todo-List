@@ -20,8 +20,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-//    UserAuthService userDetailsService;
-
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -29,22 +27,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-//    @Override
-//    public void configure(AuthenticationManagerBuilder builder)
-//            throws Exception {
-//        builder.userDetailsService(userDetailsService);
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -55,15 +42,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/api/admin/users/**").hasRole("ADMIN")
-                    .antMatchers("/api/auth/login").permitAll()
+                    .antMatchers("/api/auth/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
-                    .apply(new JwtConfigurer(jwtTokenProvider))
-                .and()
-                    .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .clearAuthentication(true)
-                    .logoutSuccessUrl("/login")
-                    .deleteCookies("JSESSIONID")
-                    .invalidateHttpSession(true);
+                    .apply(new JwtConfigurer(jwtTokenProvider));
     }
 }

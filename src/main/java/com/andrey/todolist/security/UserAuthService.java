@@ -29,10 +29,6 @@ public class UserAuthService implements UserDetailsService {
         this.userService = userService;
     }
 
-//    private User findByUsername(String username){
-//        return userService.findByUsername(username);
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
