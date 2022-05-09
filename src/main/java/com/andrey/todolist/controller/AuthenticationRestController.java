@@ -3,6 +3,7 @@ package com.andrey.todolist.controller;
 import com.andrey.todolist.dto.AuthenticationRequestDto;
 import com.andrey.todolist.dto.AuthenticationResponseDto;
 import com.andrey.todolist.dto.TokenRefreshRequestDto;
+import com.andrey.todolist.dto.UserResponseDto;
 import com.andrey.todolist.entity.RefreshToken;
 import com.andrey.todolist.entity.User;
 import com.andrey.todolist.exceptions.TokenRefreshException;
@@ -87,7 +88,9 @@ public class AuthenticationRestController {
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody User user){
-        return userService.register(user);
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody User user){
+        User registered_user = userService.register(user);
+        UserResponseDto userResponseDto = new UserResponseDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 }
