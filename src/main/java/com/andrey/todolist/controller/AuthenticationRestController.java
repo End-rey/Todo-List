@@ -85,4 +85,9 @@ public class AuthenticationRestController {
         }
         return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
     }
+
+    @PostMapping("/register")
+    public User registerUser(@RequestBody User user){
+        return userService.register(user);
+    }
 }
