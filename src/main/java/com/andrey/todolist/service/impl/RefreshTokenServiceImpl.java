@@ -34,6 +34,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    public RefreshToken findByUsername(String username) {
+        return refreshTokenRepo.findByUser(userRepo.findByUsername(username));
+    }
+
+    @Override
     public RefreshToken createRefreshToken(Long userId) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(userRepo.findById(userId).get());

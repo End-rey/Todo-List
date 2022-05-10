@@ -56,7 +56,13 @@ public class AuthenticationRestController {
             }
 
             String accessToken = jwtTokenProvider.createToken(username, user.getRoles());
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
+
+            RefreshToken refreshToken = new RefreshToken();
+            if (refreshTokenService.findByUsername(username)==null){
+                refreshToken = refreshTokenService.createRefreshToken(user.getId());
+            } else {
+                refreshToken = refreshTokenService.findByUsername(username);
+            }
 
             return ResponseEntity.ok(new AuthenticationResponseDto(username, accessToken, refreshToken.getToken()));
         } catch (AuthenticationException e) {
@@ -74,7 +80,7 @@ public class AuthenticationRestController {
             throw new TokenRefreshException(requestRefreshToken, "Refresh token is not in database");
         }
 
-        refreshTokenService.verifyExpiration(refreshToken);
+        refreshToken = refreshTokenService.verifyExpiration(refreshToken);
 
         User user = refreshToken.getUser();
         String username = user.getUsername();

@@ -7,4 +7,5 @@ public interface RefreshTokenService {
     public RefreshToken createRefreshToken(Long userId);
     public RefreshToken verifyExpiration(RefreshToken token);
     public void deleteByUserId(Long userId);
+    public RefreshToken findByUsername(String username);
 }
