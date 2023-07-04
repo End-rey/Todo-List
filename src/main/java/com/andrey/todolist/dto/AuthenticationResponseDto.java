@@ -1,6 +1,5 @@
 package com.andrey.todolist.dto;
 
-import com.andrey.todolist.entity.RefreshToken;
 import lombok.Data;
 
 @Data

@@ -1,6 +1,7 @@
 package com.andrey.todolist.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class Role extends BaseEntity{
 
     @Column(name = "name")

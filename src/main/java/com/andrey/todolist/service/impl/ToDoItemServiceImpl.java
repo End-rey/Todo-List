@@ -10,7 +10,6 @@ import com.andrey.todolist.service.ToDoItemService;
 import com.andrey.todolist.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -25,9 +24,6 @@ public class ToDoItemServiceImpl implements ToDoItemService {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private TransactionManager transactionManager;
 
     @Override
     public Iterable<ToDoItem> findAllByUser(Principal principal) {
@@ -61,8 +57,6 @@ public class ToDoItemServiceImpl implements ToDoItemService {
     @Override
     public void deleteToDo(Long id, Principal principal) {
         if(isToDoAccessible(id, principal)) {
-//            ToDoItem toDoItem = findToDoItemById(id);
-
             toDoItemRepo.deleteById(id);
         }
     }

@@ -10,6 +10,7 @@ import com.andrey.todolist.exceptions.TokenRefreshException;
 import com.andrey.todolist.security.jwt.JwtTokenProvider;
 import com.andrey.todolist.service.RefreshTokenService;
 import com.andrey.todolist.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/api/auth/")
+@RequestMapping("/data/auth/")
 public class AuthenticationRestController {
 
     private AuthenticationManager authenticationManager;
@@ -95,8 +96,8 @@ public class AuthenticationRestController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody User user){
-        User registered_user = userService.register(user);
-        UserResponseDto userResponseDto = new UserResponseDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
+        User registeredUser = userService.register(user);
+        UserResponseDto userResponseDto = new UserResponseDto(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getFirstName(), registeredUser.getLastName());
         return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 }

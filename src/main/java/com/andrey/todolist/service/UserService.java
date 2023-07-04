@@ -1,6 +1,5 @@
 package com.andrey.todolist.service;
 
-import com.andrey.todolist.entity.ToDoItem;
 import com.andrey.todolist.entity.User;
 
 import java.security.Principal;

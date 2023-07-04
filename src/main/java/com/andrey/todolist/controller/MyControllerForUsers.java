@@ -1,13 +1,16 @@
 package com.andrey.todolist.controller;
 
-import com.andrey.todolist.entity.ToDoItem;
 import com.andrey.todolist.entity.User;
 import com.andrey.todolist.service.UserService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/data")
+@SecurityRequirement(name = "todo-api")
 public class MyControllerForUsers {
 
     @Autowired

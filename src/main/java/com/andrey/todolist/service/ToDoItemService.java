@@ -4,7 +4,6 @@ import com.andrey.todolist.entity.ToDoItem;
 import com.andrey.todolist.entity.User;
 
 import java.security.Principal;
-import java.util.List;
 
 public interface ToDoItemService {
     public Iterable<ToDoItem> findAllByUser(Principal principal);

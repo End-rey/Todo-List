@@ -2,7 +2,6 @@ package com.andrey.todolist.security.jwt;
 
 import com.andrey.todolist.entity.Role;
 import com.andrey.todolist.exceptions.JwtAuthenticationException;
-import com.andrey.todolist.security.UserAuthService;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

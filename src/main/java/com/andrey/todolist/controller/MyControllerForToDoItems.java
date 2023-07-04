@@ -2,32 +2,25 @@ package com.andrey.todolist.controller;
 
 import com.andrey.todolist.dto.ToDoItemDto;
 import com.andrey.todolist.entity.ToDoItem;
-import com.andrey.todolist.entity.User;
-import com.andrey.todolist.exceptions.ToDoItemNotFoundException;
-import com.andrey.todolist.exceptions.UserAccessException;
 import com.andrey.todolist.service.ToDoItemService;
-import com.andrey.todolist.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.security.Principal;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/todos")
+@RequestMapping("/data/todos")
+@SecurityRequirement(name = "todo-api")
 public class MyControllerForToDoItems {
 
     @Autowired
     private ToDoItemService toDoItemService;
-
-    @Autowired
-    private UserService userService;
 
     @GetMapping
     public ResponseEntity<Iterable<ToDoItemDto>> showAllToDoItems(Principal principal){
@@ -63,7 +56,7 @@ public class MyControllerForToDoItems {
     }
 
     @PatchMapping("/{id}/complete")
-    public ResponseEntity completeToDoItem(@PathVariable Long id, Principal principal){
+    public ResponseEntity<?> completeToDoItem(@PathVariable Long id, Principal principal){
         toDoItemService.completeToDo(id, principal);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }

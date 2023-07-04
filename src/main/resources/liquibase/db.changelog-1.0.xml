@@ -130,7 +130,7 @@
             <column name="username" value="andrey"/>
             <column name="first_name" value="Andrey"/>
             <column name="last_name" value="Butusov"/>
-            <column name="password" value="$2y$10$hArOaYo6IYXN95d6mnhJV.bA4XnVeLzejC/3DDWcsSU5emQrFDrzm"/>
+            <column name="password" value="$2a$12$0.mZjZbNx5OiuKv.sNsX0.41Qf/l/gZlW9998XEKQUzFPbGT8dro2"/>
         </insert>
     </changeSet>
 
