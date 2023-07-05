@@ -1,18 +1,14 @@
 package com.andrey.todolist.controller;
 
 import com.andrey.todolist.dto.ToDoItemDto;
-import com.andrey.todolist.entity.ToDoItem;
 import com.andrey.todolist.service.ToDoItemService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/data/todos")
@@ -23,41 +19,24 @@ public class MyControllerForToDoItems {
     private ToDoItemService toDoItemService;
 
     @GetMapping
-    public ResponseEntity<Iterable<ToDoItemDto>> showAllToDoItems(Principal principal){
-        List<ToDoItem> toDoItems = (List<ToDoItem>) toDoItemService.findAllByUser(principal);
-        List<ToDoItemDto> toDoItemDtos = toDoItems.stream().map(item -> {
-            return new ToDoItemDto(item.getId(), item.getDescription(), item.isDone());
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.ok(toDoItemDtos);
+    public Iterable<ToDoItemDto> showAllToDoItems(Principal principal){
+        return toDoItemService.findAllByUser(principal);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ToDoItemDto> addNewToDoItem(@RequestBody ToDoItem toDoItem, Principal principal){
-        ToDoItem toDoItem1 = toDoItemService.addToDoItem(toDoItem, principal);
-        ToDoItemDto toDoItemDto = new ToDoItemDto(toDoItem1.getId(), toDoItem1.getDescription(),
-                toDoItem1.isDone());
-        return ResponseEntity.ok(toDoItemDto);
+    public ToDoItemDto addNewToDoItem(@RequestBody ToDoItemDto toDoItem, Principal principal){
+        return toDoItemService.addToDoItem(toDoItem, principal);
     }
 
     @PutMapping
-    public ResponseEntity<ToDoItemDto> updateToDoItem(@RequestBody ToDoItem toDoItem, Principal principal){
-        ToDoItem toDoItem1 = toDoItemService.editToDo(toDoItem, principal);
-        ToDoItemDto toDoItemDto = new ToDoItemDto(toDoItem1.getId(), toDoItem1.getDescription(),
-                toDoItem1.isDone());
-        return ResponseEntity.ok(toDoItemDto);
+    public ToDoItemDto updateToDoItem(@RequestBody ToDoItemDto toDoItem, Principal principal){
+        return toDoItemService.editToDo(toDoItem, principal);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteToDoItem(@PathVariable Long id, Principal principal){
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteToDoItem(@PathVariable Long id, Principal principal){
         toDoItemService.deleteToDo(id, principal);
-        return "The ToDOItem with id = " + id + " was deleted";
-    }
-
-    @PatchMapping("/{id}/complete")
-    public ResponseEntity<?> completeToDoItem(@PathVariable Long id, Principal principal){
-        toDoItemService.completeToDo(id, principal);
-        return new ResponseEntity<>(id, HttpStatus.OK);
     }
 }

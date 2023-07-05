@@ -1,11 +1,13 @@
 package com.andrey.todolist.controller;
 
-import com.andrey.todolist.entity.User;
+import com.andrey.todolist.dto.UserRequestDto;
+import com.andrey.todolist.dto.UserResponseDto;
 import com.andrey.todolist.service.UserService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,35 +19,24 @@ public class MyControllerForUsers {
     private UserService userService;
 
     @GetMapping("/admin/users")
-    public Iterable<User> showAllUsers(){
-        Iterable<User> users = userService.findAll();
-
-        return users;
+    public Iterable<UserResponseDto> showAllUsers(){
+        return userService.findAll();
     }
 
     @GetMapping("/users/{username}")
-    public User showUserByUsername(@PathVariable String username){
+    public UserResponseDto showUserByUsername(@PathVariable String username){
         return userService.findByUsername(username);
     }
 
-    @PostMapping("/users")
-    public User registerUser(@RequestBody User user){
-        return userService.register(user);
-    }
-
     @PutMapping("/users")
-    public User updateUser(@RequestBody User user){
-        return userService.saveUser(user);
+    public UserResponseDto updateUser(@RequestBody UserRequestDto userRequestDto){
+        return userService.updateUser(userRequestDto);
     }
 
     @DeleteMapping("/users/{username}")
-    public String deleteUserByUsername(@PathVariable String username){
-        User user = userService.findByUsername(username);
-        if(user != null) {
-            userService.deleteUser(user);
-            return "User with username " + username + " was deleted";
-        } else
-            return "No such user";
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserByUsername(@PathVariable String username){
+        userService.deleteUserByUsername(username);
     }
 
 }

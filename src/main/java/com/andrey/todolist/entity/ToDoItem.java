@@ -1,8 +1,12 @@
 package com.andrey.todolist.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -10,6 +14,9 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "todo_list")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class  ToDoItem extends BaseEntity{
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)

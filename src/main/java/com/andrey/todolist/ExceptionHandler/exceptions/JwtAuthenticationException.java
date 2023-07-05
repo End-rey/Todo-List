@@ -1,4 +1,4 @@
-package com.andrey.todolist.exceptions;
+package com.andrey.todolist.ExceptionHandler.exceptions;
 
 
 import org.springframework.security.core.AuthenticationException;

@@ -1,8 +1,8 @@
 package com.andrey.todolist.service.impl;
 
+import com.andrey.todolist.ExceptionHandler.exceptions.TokenRefreshException;
 import com.andrey.todolist.entity.RefreshToken;
 import com.andrey.todolist.entity.Status;
-import com.andrey.todolist.exceptions.TokenRefreshException;
 import com.andrey.todolist.repository.RefreshTokenRepo;
 import com.andrey.todolist.repository.UserRepo;
 import com.andrey.todolist.service.RefreshTokenService;
@@ -55,7 +55,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if(token.getExpiryDate().before(new Date())){
             refreshTokenRepo.delete(token);
-            throw new TokenRefreshException(token.getToken(), "Refresh token is expired");
+            throw new TokenRefreshException("Refresh token " + token.getToken() + " is expired");
         }
         return token;
     }
